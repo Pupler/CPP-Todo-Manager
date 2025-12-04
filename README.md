@@ -2,10 +2,14 @@
 
 A console-based task manager built in C++ for learning data structures and STL containers. Features clean output and easy task management.
 
+## 📸 Preview
+
+<img width="362" height="447" alt="image" src="https://github.com/user-attachments/assets/15deeff2-46ca-4c6c-909c-af8c87bc669c" />
+
 ## ✨ Features
 - ➕ Create tasks with description and status
 - 📋 Display all tasks in formatted list
-- ✅ Mark tasks as completed/incomplete
+- ✅ Mark tasks as completed/incompleted [IN DEVELOPING]
 - 🏗️ Built with C++ STL containers
 
 ## 🛠️ Technology Stack
@@ -23,3 +27,7 @@ cd CPP-Todo-Manager
 g++ main.cpp -o todo
 ./todo
 ```
+
+## 📄 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
