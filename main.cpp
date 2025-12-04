@@ -27,6 +27,25 @@ void addTask(vector<Task>& tasks) {
     cout << "Task added!" << endl;
 }
 
+void makeCompleted(string& input, vector<Task>& tasks) {
+    string str_num = input.substr(9);
+    int task_num = stoi(str_num);
+
+    if (task_num < 1 || task_num > tasks.size()) {
+        cout << "Error: Task " << task_num << " doesn't exist!" << endl;
+        return;
+    }    
+
+    if (tasks[task_num - 1].is_completed == false) {
+        tasks[task_num - 1].is_completed = true;
+        cout << "Task completed!" << endl;
+        return;
+    } else {
+        cout << "Task is already completed!" << endl;
+        return;
+    }
+}
+
 int main() {
     vector<Task> tasks;
 
@@ -53,6 +72,8 @@ int main() {
         } else if (input == "clear") {
             system("clear");
             showHeader();
+        } else if (input.rfind("complete ", 0) == 0) {
+            makeCompleted(input, tasks);
         } else if (input == "help") {
             cout << "Available commands:\n";
             cout << "  list - Show all tasks\n";
