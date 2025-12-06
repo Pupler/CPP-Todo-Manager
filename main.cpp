@@ -48,6 +48,20 @@ void completeTask(string& input, vector<Task>& tasks) {
     }
 }
 
+void showStats(vector<Task>& tasks) {
+    int count_completed = 0;
+
+    for (int i = 0; i < tasks.size(); i++) {
+        if (tasks[i].is_completed == true) {
+            count_completed++;
+        }
+    }
+
+    cout << "\n📊 " << "Total: " << tasks.size() << " tasks (✅ "
+    << count_completed << " done, " << "⏳ "
+    << tasks.size() - count_completed << " pending)\n" << endl;
+}
+
 void deleteTask(string& input, vector<Task>& tasks) {
     string str_num = input.substr(7);
     int task_num = stoi(str_num);
@@ -71,6 +85,7 @@ int main() {
     showHeader();
 
     while (true) {
+        cout << endl;
         cout << "\033[1;36m";
         cout << "> ";
         getline(cin, input);
@@ -82,7 +97,7 @@ int main() {
             cout << "╔══════════════════════════════════════╗\n";
             cout << "║            📋 TASKS LIST             ║\n";
             cout << "╚══════════════════════════════════════╝";
-            cout << "\n📊 " << "Tasks left: " << tasks.size() << "\n" << endl;
+            showStats(tasks);
             for (int i = 0; i < tasks.size(); i++) {
                 cout << "┌─[" << i+1 << "]─ " << tasks[i].description << "\n";
                 cout << "│   Status: " << (tasks[i].is_completed ? "[\033[32m✅ DONE\033[0m]" : "[\033[31m⏳ PENDING\033[0m]") << "\n";
@@ -111,8 +126,6 @@ int main() {
         } else {
             cout << "Invalid command!" << endl;
         }
-
-        cout << endl;
     }
 
     return 0;
