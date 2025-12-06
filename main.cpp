@@ -12,11 +12,53 @@ struct Task {
     }
 };
 
+void showStats(vector<Task>& tasks) {
+    int count_completed = 0;
+
+    for (int i = 0; i < tasks.size(); i++) {
+        if (tasks[i].is_completed == true) {
+            count_completed++;
+        }
+    }
+
+    cout << "📊 " << "Total: " << tasks.size() << " tasks (✅ "
+    << count_completed << " done, " << "⏳ "
+    << tasks.size() - count_completed << " pending)\n" << endl;
+}
+
 void showHeader() {
     cout << "\n╔══════════════════════════════════════╗\n";
     cout << "║         📝 C++ TODO MANAGER          ║\n";
     cout << "╚══════════════════════════════════════╝\n";
     cout << "Commands: list, add, complete, help, clear, exit" << endl;
+}
+
+void showTasksList(vector<Task>& tasks) {
+    cout << "╔══════════════════════════════════════╗\n";
+    cout << "║            📋 TASKS LIST             ║\n";
+    cout << "╚══════════════════════════════════════╝\n";
+    showStats(tasks);
+    if (!tasks.empty()) {
+        for (int i = 0; i < tasks.size(); i++) {
+            cout << "┌─[" << i+1 << "]─ " << tasks[i].description << "\n";
+            cout << "│   Status: " << (tasks[i].is_completed ? "[\033[32m✅ DONE\033[0m]" : "[\033[31m⏳ PENDING\033[0m]") << "\n";
+            cout << "└─────────────────────────────────────\n";
+        }
+        return;
+    }
+
+    cout << "Tasks list is empty. Use command 'add' to add a new task." << endl;
+}
+
+void showHelp() {
+    cout << "Available commands:" << endl;
+    cout << "  list - Show all tasks" << endl;
+    cout << "  add - Add a new task" << endl;
+    cout << "  complete [task number] - Complete task" << endl;
+    cout << "  delete [task number] - Delete task" << endl;
+    cout << "  help - Show this help" << endl;
+    cout << "  clear - Clear console" << endl;
+    cout << "  exit - Quit program" << endl;
 }
 
 void addTask(vector<Task>& tasks) {
@@ -76,26 +118,12 @@ void deleteTask(string& input, vector<Task>& tasks) {
     }
 }
 
-void showStats(vector<Task>& tasks) {
-    int count_completed = 0;
-
-    for (int i = 0; i < tasks.size(); i++) {
-        if (tasks[i].is_completed == true) {
-            count_completed++;
-        }
-    }
-
-    cout << "\n📊 " << "Total: " << tasks.size() << " tasks (✅ "
-    << count_completed << " done, " << "⏳ "
-    << tasks.size() - count_completed << " pending)\n" << endl;
-}
-
 int main() {
     vector<Task> tasks;
     string input;
-    tasks.push_back(Task("Buy a bread", false));
-    tasks.push_back(Task("Do homework", true));
-    tasks.push_back(Task("Learn C#", false));
+    // tasks.push_back(Task("Buy a bread", false));
+    // tasks.push_back(Task("Do homework", true));
+    // tasks.push_back(Task("Learn C#", false));
 
     showHeader();
 
@@ -109,15 +137,7 @@ int main() {
         if (input.empty()) {
             continue;
         } else if (input == "list") {
-            cout << "╔══════════════════════════════════════╗\n";
-            cout << "║            📋 TASKS LIST             ║\n";
-            cout << "╚══════════════════════════════════════╝";
-            showStats(tasks);
-            for (int i = 0; i < tasks.size(); i++) {
-                cout << "┌─[" << i+1 << "]─ " << tasks[i].description << "\n";
-                cout << "│   Status: " << (tasks[i].is_completed ? "[\033[32m✅ DONE\033[0m]" : "[\033[31m⏳ PENDING\033[0m]") << "\n";
-                cout << "└─────────────────────────────────────\n";
-            }
+            showTasksList(tasks);
         } else if (input == "add") {
             addTask(tasks);
         } else if (input == "clear") {
@@ -128,14 +148,7 @@ int main() {
         } else if (input.rfind("delete ", 0) == 0) {
             deleteTask(input, tasks);
         } else if (input == "help") {
-            cout << "Available commands:\n";
-            cout << "  list - Show all tasks\n";
-            cout << "  add - Add a new task\n";
-            cout << "  complete [task number] - Complete task\n";
-            cout << "  delete [task number] - Delete task\n";
-            cout << "  help - Show this help\n";
-            cout << "  clear - Clear console\n";
-            cout << "  exit - Quit program\n";
+            showHelp();
         } else if (input == "exit") {
             break;
         } else {
