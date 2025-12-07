@@ -9,8 +9,13 @@ A console-based task manager built in C++ for learning data structures and STL c
 ## ✨ Features
 - ➕ Create tasks with description and status
 - 📋 Display all tasks in formatted list
-- ✅ Mark tasks as completed/incompleted [IN DEVELOPING]
+- ✅ Mark tasks as completed/incompleted
 - 🏗️ Built with C++ STL containers
+- ✏️ Edit existing task descriptions
+- 🔍 Search tasks by keyword
+- 🎨 Colorful terminal interface with emojis
+- 🧹 Console clearing for better UX
+- 📊 View task statistics (completed/pending)
 
 ## 🛠️ Technology Stack
 - C++17
