@@ -143,12 +143,35 @@ void editTask(string& input, vector<Task>& tasks) {
     }
 }
 
+void searchTask(string& input, vector<Task>& tasks) {
+    bool found = false;
+    string taskSearchDesc = input.substr(7);
+
+    if (taskSearchDesc.empty()) {
+        cout << "Error: Search query is empty!" << endl;
+        return;
+    }
+
+    cout << "🔎 Result of searching '" << taskSearchDesc << "':" << endl;
+
+    for (int i = 0; i < tasks.size(); i++) {
+        if (tasks[i].description.find(taskSearchDesc) != string::npos) {
+            cout << "[" << i + 1 << "] " << tasks[i].description << " - " << (tasks[i].is_completed ? "✅" : "⏳") << endl;
+            found = true;
+        }
+    }
+
+    if (found == false) {
+        cout << "No tasks found!" << endl;
+    }
+}
+
 int main() {
     vector<Task> tasks;
     string input;
-    // tasks.push_back(Task("Buy a bread", false));
-    // tasks.push_back(Task("Do homework", true));
-    // tasks.push_back(Task("Learn C#", false));
+    tasks.push_back(Task("Buy a bread", false));
+    tasks.push_back(Task("Do homework", true));
+    tasks.push_back(Task("Learn C#", false));
 
     showHeader();
 
@@ -174,6 +197,8 @@ int main() {
             deleteTask(input, tasks);
         } else if (input.rfind("edit ", 0) == 0) {
             editTask(input, tasks);
+        } else if (input.rfind("search ", 0) == 0) {
+            searchTask(input, tasks);
         } else if (input == "help") {
             showHelp();
         } else if (input == "exit") {
