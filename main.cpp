@@ -55,8 +55,10 @@ void showHelp() {
     cout << "  list - Show all tasks" << endl;
     cout << "  add - Add a new task" << endl;
     cout << "  complete [task number] - Complete task" << endl;
+    cout << "  uncomplete [task number] - Uncomplete task" << endl;
     cout << "  delete [task number] - Delete task" << endl;
     cout << "  edit [task number] - Edit task" << endl;
+    cout << "  search [text] - Search tasks" << endl;
     cout << "  help - Show this help" << endl;
     cout << "  clear - Clear console" << endl;
     cout << "  exit - Quit program" << endl;
@@ -89,10 +91,33 @@ void completeTask(string& input, vector<Task>& tasks) {
 
         if (tasks[task_num - 1].is_completed == false) {
             tasks[task_num - 1].is_completed = true;
-            cout << "Task " << task_num << " completed!" << endl;
+            cout << "Task " << task_num << " was marked completed!" << endl;
             return;
         } else {
             cout << "Task is already completed!" << endl;
+            return;
+        }
+    } catch(...) {
+        cout << "Invalid task number!" << endl;
+    }
+}
+
+void unCompleteTask(string& input, vector<Task>& tasks) {
+    try {
+        string str_num = input.substr(11);
+        int task_num = stoi(str_num);
+
+        if (task_num < 1 || task_num > tasks.size()) {
+            cout << "Error: Task " << task_num << " doesn't exist!" << endl;
+            return;
+        }
+
+        if (tasks[task_num - 1].is_completed == true) {
+            tasks[task_num - 1].is_completed = false;
+            cout << "Task " << task_num << " was marked uncompleted!" << endl;
+            return;
+        } else {
+            cout << "Task is not completed yet!" << endl;
             return;
         }
     } catch(...) {
@@ -193,6 +218,8 @@ int main() {
             showHeader();
         } else if (input.rfind("complete ", 0) == 0) {
             completeTask(input, tasks);
+        } else if (input.rfind("uncomplete ", 0) == 0) {
+            unCompleteTask(input, tasks);
         } else if (input.rfind("delete ", 0) == 0) {
             deleteTask(input, tasks);
         } else if (input.rfind("edit ", 0) == 0) {
