@@ -13,11 +13,31 @@ struct Task {
     }
 };
 
-void writeFile(vector<Task>& tasks) {
+void writeIntoFile(vector<Task>& tasks) {
     ofstream writeFile("tasks.txt"); // write file (.txt)
 
     for (int i = 0; i < tasks.size(); i++) {
         writeFile << tasks[i].description << "|" << tasks[i].is_completed << endl;
+    }
+}
+
+void loadFromFile(vector<Task>& tasks) {
+    string task_description;
+    bool task_is_completed;
+    string line;
+    ifstream readFile("tasks.txt");
+
+    while (getline(readFile, line)) {
+        size_t pos1 = line.find("|");
+        
+        task_description = line.substr(0, pos1);
+        
+        string str_num = line.substr(pos1 + 1);
+        int task_status = stoi(str_num);
+
+        task_is_completed = task_status;
+
+        tasks.push_back(Task(task_description, task_is_completed));
     }
 }
 
@@ -81,7 +101,7 @@ void addTask(vector<Task>& tasks) {
 
     if (!taskDesc.empty()) {
         tasks.push_back(Task(taskDesc, false));
-        writeFile(tasks);
+        writeIntoFile(tasks);
         cout << "Task added!" << endl;
         return;
     }
@@ -101,7 +121,7 @@ void completeTask(string& input, vector<Task>& tasks) {
 
         if (tasks[task_num - 1].is_completed == false) {
             tasks[task_num - 1].is_completed = true;
-            writeFile(tasks);
+            writeIntoFile(tasks);
             cout << "Task " << task_num << " was marked completed!" << endl;
             return;
         } else {
@@ -125,7 +145,7 @@ void unCompleteTask(string& input, vector<Task>& tasks) {
 
         if (tasks[task_num - 1].is_completed == true) {
             tasks[task_num - 1].is_completed = false;
-            writeFile(tasks);
+            writeIntoFile(tasks);
             cout << "Task " << task_num << " was marked uncompleted!" << endl;
             return;
         } else {
@@ -148,7 +168,7 @@ void deleteTask(string& input, vector<Task>& tasks) {
         }
 
         tasks.erase(tasks.begin() + (task_num - 1));
-        writeFile(tasks);
+        writeIntoFile(tasks);
         cout << "Task " << task_num << " was successfully deleted!" << endl;
     } catch(...) {
         cout << "Invalid task number!" << endl;
@@ -171,7 +191,7 @@ void editTask(string& input, vector<Task>& tasks) {
 
         if (!newTaskDesc.empty()) {
             tasks[task_num - 1].description = newTaskDesc;
-            writeFile(tasks);
+            writeIntoFile(tasks);
             cout << "Task " << task_num << " was successfully edited!" << endl;
             return;
         }
@@ -208,11 +228,9 @@ void searchTask(string& input, vector<Task>& tasks) {
 int main() {
     vector<Task> tasks;
     string input;
-    tasks.push_back(Task("Buy a bread", false));
-    tasks.push_back(Task("Do homework", true));
-    tasks.push_back(Task("Learn C#", false));
 
     showHeader();
+    loadFromFile(tasks);
 
     while (true) {
         cout << endl;
