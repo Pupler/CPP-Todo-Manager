@@ -56,6 +56,12 @@ clear                  # Clear console screen
 exit                   # Quit program
 ```
 
+## 📁 Data Persistence
+
+- Tasks are automatically saved to tasks.txt after every modification
+- Data loads automatically on program startup
+- Format: description|status (e.g., Buy milk|0)
+
 ## 📄 License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
