@@ -1,15 +1,18 @@
 #include <iostream>
 #include <vector>
 #include <fstream>
+#include <ctime>
 using namespace std;
 
 struct Task {
     string description;
     bool is_completed;
+    time_t created_at;
 
-    Task(const string& desc, bool is_compltd = false) {
+    Task(const string& desc, bool is_compltd = false, time_t created = time(nullptr)) {
         description = desc;
         is_completed = is_compltd;
+        created_at = created;
     }
 };
 
@@ -17,27 +20,31 @@ void writeIntoFile(vector<Task>& tasks) {
     ofstream writeFile("tasks.txt"); // write file (.txt)
 
     for (int i = 0; i < tasks.size(); i++) {
-        writeFile << tasks[i].description << "|" << tasks[i].is_completed << endl;
+        writeFile << tasks[i].description << "|" << tasks[i].is_completed << "|" << tasks[i].created_at << endl;
     }
 }
 
 void loadFromFile(vector<Task>& tasks) {
     string task_description;
     bool task_is_completed;
+    time_t task_created_at;
     string line;
     ifstream readFile("tasks.txt");
 
     while (getline(readFile, line)) {
-        size_t pos1 = line.find("|");
+        size_t pos1 = line.find("|"); // position number
+        size_t pos2 = line.find("|", pos1 + 1); // position number
         
         task_description = line.substr(0, pos1);
         
-        string str_num = line.substr(pos1 + 1);
-        int task_status = stoi(str_num);
-
+        string str_num_task_status = line.substr(pos1 + 1, 1);
+        int task_status = stoi(str_num_task_status);
         task_is_completed = task_status;
 
-        tasks.push_back(Task(task_description, task_is_completed));
+        string str_num_task_created_at = line.substr(pos2 + 1);
+        task_created_at = stoll(str_num_task_created_at);
+
+        tasks.push_back(Task(task_description, task_is_completed, task_created_at));
     }
 }
 
@@ -71,7 +78,8 @@ void showTasksList(vector<Task>& tasks) {
         for (int i = 0; i < tasks.size(); i++) {
             cout << "┌─[" << i+1 << "]─ " << tasks[i].description << "\n";
             cout << "│   Status: " << (tasks[i].is_completed ? "[\033[32m✅ DONE\033[0m]" : "[\033[31m⏳ PENDING\033[0m]") << "\n";
-            cout << "└─────────────────────────────────────\n";
+            cout << "│   Created at: " << ctime(&tasks[i].created_at);
+            cout << "└───────────────────────────────────────\n";
         }
         return;
     }
@@ -100,7 +108,7 @@ void addTask(vector<Task>& tasks) {
     getline(cin, taskDesc);
 
     if (!taskDesc.empty()) {
-        tasks.push_back(Task(taskDesc, false));
+        tasks.push_back(Task(taskDesc));
         writeIntoFile(tasks);
         cout << "Task added!" << endl;
         return;
