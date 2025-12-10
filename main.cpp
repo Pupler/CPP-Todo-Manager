@@ -7,11 +7,13 @@ using namespace std;
 struct Task {
     string description;
     bool is_completed;
+    string category;
     time_t created_at;
 
-    Task(const string& desc, bool is_compltd = false, time_t created = time(nullptr)) {
+    Task(const string& desc, bool is_compltd, const string& ctg, time_t created = time(nullptr)) {
         description = desc;
         is_completed = is_compltd;
+        category = ctg;
         created_at = created;
     }
 };
@@ -20,13 +22,14 @@ void writeIntoFile(vector<Task>& tasks) {
     ofstream writeFile("tasks.txt"); // write file (.txt)
 
     for (int i = 0; i < tasks.size(); i++) {
-        writeFile << tasks[i].description << "|" << tasks[i].is_completed << "|" << tasks[i].created_at << endl;
+        writeFile << tasks[i].description << "|" << tasks[i].is_completed << "|" << tasks[i].category << "|" << tasks[i].created_at << endl;
     }
 }
 
 void loadFromFile(vector<Task>& tasks) {
     string task_description;
     bool task_is_completed;
+    string task_category;
     time_t task_created_at;
     string line;
     ifstream readFile("tasks.txt");
@@ -34,17 +37,20 @@ void loadFromFile(vector<Task>& tasks) {
     while (getline(readFile, line)) {
         size_t pos1 = line.find("|"); // position number
         size_t pos2 = line.find("|", pos1 + 1); // position number
+        size_t pos3 = line.find("|", pos2 + 1); // position number
         
         task_description = line.substr(0, pos1);
         
-        string str_num_task_status = line.substr(pos1 + 1, 1);
-        int task_status = stoi(str_num_task_status);
+        string str_num1 = line.substr(pos1 + 1, 1);
+        int task_status = stoi(str_num1);
         task_is_completed = task_status;
 
-        string str_num_task_created_at = line.substr(pos2 + 1);
-        task_created_at = stoll(str_num_task_created_at);
+        task_category = line.substr(pos2 + 1, pos3 - pos2 - 1);
 
-        tasks.push_back(Task(task_description, task_is_completed, task_created_at));
+        string str_num2 = line.substr(pos3 + 1);
+        task_created_at = stoll(str_num2);
+
+        tasks.push_back(Task(task_description, task_is_completed, task_category, task_created_at));
     }
 }
 
@@ -78,6 +84,7 @@ void showTasksList(vector<Task>& tasks) {
         for (int i = 0; i < tasks.size(); i++) {
             cout << "┌─[" << i+1 << "]─ " << tasks[i].description << "\n";
             cout << "│   Status: " << (tasks[i].is_completed ? "[\033[32m✅ DONE\033[0m]" : "[\033[31m⏳ PENDING\033[0m]") << "\n";
+            cout << "│   Category: " << tasks[i].category << "\n";
             cout << "│   Created at: " << ctime(&tasks[i].created_at);
             cout << "└───────────────────────────────────────\n";
         }
@@ -103,18 +110,22 @@ void showHelp() {
 
 void addTask(vector<Task>& tasks) {
     string taskDesc;
+    string taskCtg;
 
     cout << "Enter task description: ";
     getline(cin, taskDesc);
 
-    if (!taskDesc.empty()) {
-        tasks.push_back(Task(taskDesc));
+    cout << "Enter task category: ";
+    getline(cin, taskCtg);
+
+    if (!taskDesc.empty() && !taskCtg.empty()) {
+        tasks.push_back(Task(taskDesc, false, taskCtg));
         writeIntoFile(tasks);
         cout << "Task added!" << endl;
         return;
     }
 
-    cout << "Error: Task description is empty!" << endl;
+    cout << "Error: Task description or category is empty!" << endl;
 }
 
 void completeTask(string& input, vector<Task>& tasks) {
