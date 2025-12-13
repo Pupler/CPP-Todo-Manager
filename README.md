@@ -60,7 +60,7 @@ exit                           # Quit program
 
 - Tasks are automatically saved to ```tasks.txt``` after every modification
 - Data loads automatically on program startup
-- Format: ```description|status|timestamp``` (e.g., Buy milk|0|1765367015)
+- Format: ```description|status|category|timestamp``` (e.g., Buy milk|0|Shopping|1765367015)
 
 ## 📄 License
 
